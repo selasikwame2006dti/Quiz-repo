@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospitality Industry Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Open Graph Meta Tags for Link Preview -->
+    <meta property="og:title" content="Hospitality Industry Quiz Challenge!">
+    <meta property="og:description" content="Test your knowledge on the structure, characteristics, and components of the hospitality industry. Prepare for your exams with this interactive quiz.">
+    <meta property="og:image" content="https://placehold.co/1200x630/065f46/ffffff?text=Hospitality+Quiz">
+    <meta property="og:url" content="https://yourdomain.com/quiz"> <!-- IMPORTANT: Update with your actual quiz URL -->
+    <meta property="og:type" content="website">
+    <!-- End Open Graph Meta Tags -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            transition: all 0.5s ease-in-out;
+            opacity: 1; /* Always visible and ready to fade in */
+            transform: translateY(0); /* Always in place */
+        }
+        /* No .quiz-container.show needed anymore for initial display */
+
+        .option-button {
+            background-color: #e2e8f0;
+            color: #334155;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            text-align: left;
+            width: 100%;
+            /* Responsive font size for options */
+            font-size: 1rem; /* Base size for mobile (text-base) */
+            @media (min-width: 640px) { /* sm breakpoint */
+                font-size: 1.125rem; /* text-lg */
+            }
+            border: 1px solid transparent;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        .option-button.correct {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-color: #34d399;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+        .option-button.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        #timer-bar {
+            transition: width 1s linear; /* Animate width change over 1 second */
+        }
+        .time-low-pulse {
+             background-image: linear-gradient(to right, #ef4444, #b91c1c);
+             animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .score-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-color: #f8fafc;
+            border-radius: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease-in-out;
+        }
+        .score-card.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .score-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+        }
+        .start-button {
+            background-color: #065f46;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .start-button:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+        }
+        .start-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .social-share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap; /* Added for responsiveness */
+        }
+        .social-share-buttons button {
+            background-color: #6b7280;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+            flex-grow: 1; /* Allow buttons to grow */
+            justify-content: center; /* Center content in buttons */
+        }
+        .social-share-buttons button:hover {
+            background-color: #4b5563;
+        }
+        .social-share-buttons .whatsapp { background-color: #25D366; }
+        .social-share-buttons .whatsapp:hover { background-color: #1DA851; }
+        .social-share-buttons .facebook { background-color: #1877F2; }
+        .social-share-buttons .facebook:hover { background-color: #145CB3; }
+        .social-share-buttons .pinterest { background-color: #E60023; }
+        .social-share-buttons .pinterest:hover { background-color: #B3001C; }
+        .social-share-buttons .teams { background-color: #6264A7; }
+        .social-share-buttons .teams:hover { background-color: #4A4C84; }
+
+        .challenge-info {
+            background-color: #e0f2fe;
+            border: 1px solid #90cdf4;
+            color: #2c5282;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        @media (max-width: 640px) {
+            .quiz-container { padding: 1.5rem; }
+            .option-button { font-size: 1rem; padding: 0.6rem 1rem; }
+            .score-icon { width: 60px; height: 60px; }
+            .start-button { padding: 0.8rem 1.5rem; font-size: 1.1rem; }
+            .social-share-buttons { flex-wrap: wrap; }
+            .social-share-buttons button { width: calc(50% - 0.5rem); justify-content: center; }
+        }
+
+        /* Color classes for score */
+        .text-red-600 { color: #dc2626; }
+        .text-orange-600 { color: #ea580c; }
+        .text-yellow-600 { color: #eab308; }
+        .text-lime-600 { color: #65a30d; }
+        .text-green-600 { color: #16a34a; }
+
+        /* Modal styling */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Fill-in-the-blank specific styles */
+        .blank-placeholder {
+            display: inline-block;
+            min-width: 50px; /* Ensure blank has some width */
+            text-decoration: none; /* Remove default underline */
+            background-color: #f8fafc; /* Light background for the blank */
+            border: 1px solid #cbd5e1; /* Subtle border */
+            border-radius: 4px; /* Slightly rounded corners */
+            padding: 2px 6px; /* Internal padding */
+            color: #047857; /* Dark green for filled text */
+            font-weight: 600;
+            margin: 0 4px; /* Space around blanks */
+            transition: all 0.5s ease-out; /* Animation for filling */
+            opacity: 1; /* Always visible */
+            transform: translateY(0); /* Always in place */
+        }
+        /* Style for the demo blank placeholder */
+        .blank-placeholder-demo {
+            display: inline-block;
+            min-width: 50px;
+            text-decoration: none;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin: 0 4px;
+            transition: all 0.5s ease-out;
+            /* Initial state for demo blank */
+            color: #6b7280; /* A lighter gray to indicate it's empty */
+            font-weight: 400; /* Normal weight when empty */
+        }
+        /* Class to apply when demo blank is filled */
+        .blank-placeholder-demo.filled {
+            color: #047857; /* Dark green for filled text */
+            font-weight: 600; /* Bold when filled */
+        }
+
+        /* Ensure text parts and blanks flow correctly within the question */
+        #question-text span {
+            display: inline; /* Keep all spans inline by default */
+        }
+        /* Responsive font size for question text */
+        #question-text {
+            font-size: 1.25rem; /* text-xl for small screens */
+            line-height: 1.6; /* Increased line-height for better spacing */
+            text-align: center; /* Ensure text is centered */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            #question-text {
+                font-size: 1.5rem; /* text-2xl for larger screens */
+            }
+        }
+        /* Container for the question text to handle centering */
+        .question-text-wrapper {
+            min-height: 100px; /* Maintain height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem; /* Matches mb-8 on original h2 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="quiz-app" class="quiz-container show"> <!-- Always visible -->
+        <div id="start-screen" class="text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6">Hospitality Industry Quiz</h1>
+            <p class="text-lg text-gray-600 mb-4">Ready to test your knowledge on the structure, characteristics, and components of the hospitality industry? Let's begin!</p>
+            <input type="text" id="user-name-input" class="input-field" placeholder="Enter your name to start" maxlength="30">
+            <button id="start-button" class="start-button">Start Quiz</button>
+        </div>
+
+        <div id="challenge-intro-screen" class="hidden text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6">Challenge Accepted!</h1>
+            <div class="challenge-info">
+                <p class="mb-2">You are challenging <span id="challenger-name-display" class="font-bold"></span>'s score of <span id="challenger-score-display" class="font-bold"></span> out of <span id="challenger-total-display" class="font-bold"></span>.</p>
+                <p id="challenger-speed-display" class="mb-2"></p>
+                <p id="challenger-proficiency-display" class="mb-4"></p>
+                <p class="mb-4">Enter your name to take on the challenge!</p>
+                <input type="text" id="challenger-name-input" class="input-field" placeholder="Your name" maxlength="30">
+            </div>
+            <button id="start-challenge-button" class="start-button">Start Challenge</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <div id="quiz-header" class="mb-6">
+                 <div class="flex justify-between items-center text-gray-600 mb-2">
+                    <p id="question-count" class="text-sm font-semibold">Question 1 of 20</p>
+                    <p id="timer-text" class="text-sm font-semibold">Time: 35s</p>
+                </div>
+                <div id="timer-container" class="w-full bg-gray-200 rounded-full h-2.5">
+                     <div id="timer-bar" class="bg-gradient-to-r from-indigo-500 to-blue-500 h-2.5 rounded-full" style="width: 100%;"></div>
+                </div>
+            </div>
+            <!-- New wrapper div for question text -->
+            <div class="question-text-wrapper">
+                <h2 id="question-text" class="font-semibold text-gray-900 leading-relaxed"></h2>
+            </div>
+            <div id="options-container" class="grid grid-cols-1 gap-4"></div>
+        </div>
+
+        <div id="score-card" class="score-card hidden">
+            <div id="score-icon-display" class="score-icon"></div>
+            <h3 id="score-text" class="text-3xl font-bold text-gray-800 mb-4"></h3>
+            <!-- New dashboard elements -->
+            <p id="average-speed-display" class="text-lg text-gray-600 mb-2"></p>
+            <p id="proficiency-score-display" class="text-lg font-bold mb-4"></p>
+            <!-- End new dashboard elements -->
+            <p id="score-review" class="text-lg text-gray-600 mb-8"></p>
+            <div id="challenge-outcome-message" class="text-xl font-semibold text-blue-700 mb-4 hidden"></div>
+            <div class="flex flex-col items-center gap-4">
+                <button id="review-answers-button" class="start-button bg-purple-600 hover:bg-purple-700">Review Wrong Answers</button>
+                <button id="restart-button" class="start-button">Play Again</button>
+                <div id="share-section" class="w-full">
+                    <p class="text-gray-700 font-semibold mb-2">Share your score and challenge others!</p>
+                    <div class="social-share-buttons">
+                        <button id="share-whatsapp" class="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                        <button id="share-facebook" class="facebook"><i class="fab fa-facebook-f"></i> Facebook</button>
+                        <button id="share-pinterest" class="pinterest"><i class="fab fa-pinterest-p"></i> Pinterest</button>
+                        <button id="share-teams" class="teams"><i class="fab fa-microsoftteams"></i> Teams</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Wrong Answers Review -->
+    <div id="wrong-answers-modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4 hidden modal-overlay">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full modal-content">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Review Your Answers</h3>
+            <div id="wrong-answers-list">
+                <!-- Wrong answers will be injected here -->
+            </div>
+            <button class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="document.getElementById('wrong-answers-modal').classList.add('hidden')">Close</button>
+        </div>
+    </div>
+
+    <!-- Guide Modal (New) -->
+    <div id="guide-modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4 modal-overlay hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-xl w-full text-center modal-content">
+            <h3 class="text-3xl font-bold text-gray-800 mb-4">Welcome! How to Play This Quiz</h3>
+            <p class="text-lg text-gray-700 mb-6">
+                This is a **fill-in-the-blank** quiz. You'll see sentences with missing words, indicated by blank spaces like this:
+            </p>
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p class="text-lg text-gray-800 font-medium mb-4">
+                    "This is a demo <span id="demo-blank-text" class="blank-placeholder-demo">____</span> question."
+                </p>
+                <button id="demo-fill-button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                    Try it!
+                </button>
+            </div>
+            <p class="text-lg text-gray-700 mb-6">
+                Below each question, you'll find multiple-choice options. Select the option that correctly fills all the blanks in the sentence.
+            </p>
+            <button id="close-guide-button" class="start-button">Got It! Start Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Local Storage Key ---
+        const QUIZ_GUIDE_SHOWN_KEY = 'quizGuideShown';
+
+        // --- Fallback for crypto.randomUUID() ---
+        function generateUUID() {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            // Fallback for environments where crypto.randomUUID is not available
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // --- Quiz Questions Data (Fill-in-the-blank format) ---
+        // A total of 80 questions on the topic of "Introduction to Hospitality" have been created from the provided documents.
+        const allQuestions = [
+            // From 1.0 THE MEANING AND SCOPE OF HOSPITALITY
+            {
+                id: 'hosp_q1',
+                question: "The ancient Greco-Roman concept of hospitality, where a guest's right was divine and the host's duty was divine, is known as ____.",
+                blanks: 1,
+                options: [
+                    "Hospitium",
+                    "Hospice",
+                    "Hospitare",
+                    "Agape"
+                ],
+                correctAnswer: "Hospitium",
+                explanation: "Hospitium is the ancient concept of hospitality as a divine right and duty."
+            },
+            {
+                id: 'hosp_q2',
+                question: "The word 'hospitality' is derived from the French word ______, which means to provide for the weary.",
+                blanks: 1,
+                options: [
+                    "Hospice",
+                    "Hospitium",
+                    "Hospitare",
+                    "Hotelier"
+                ],
+                correctAnswer: "Hospice",
+                explanation: "Hospice is a French word meaning to provide for the weary or to take care of travelers."
+            },
+            {
+                id: 'hosp_q3',
+                question: "Hospitality is also derived from the Latin word ______, which means 'receive as a guest'.",
+                blanks: 1,
+                options: [
+                    "hospitare",
+                    "hospitium",
+                    "hospice",
+                    "hospitum"
+                ],
+                correctAnswer: "hospitare",
+                explanation: "Hospitare is the Latin root for hospitality, meaning to receive as a guest."
+            },
+            {
+                id: 'hosp_q4',
+                question: "The Oxford English Dictionary defines hospitality as 'the reception and entertainment of ____, ____ and others'.",
+                blanks: 2,
+                options: [
+                    "guests, visitors",
+                    "family, friends",
+                    "customers, clients",
+                    "strangers, travelers"
+                ],
+                correctAnswer: "guests, visitors",
+                explanation: "The dictionary definition focuses on the reception and entertainment of guests and visitors."
+            },
+            {
+                id: 'hosp_q5',
+                question: "The hospitality industry can be described as a group of firms that provide food, beverages, and/or _____ services to people who are away from home.",
+                blanks: 1,
+                options: [
+                    "accommodation",
+                    "entertainment",
+                    "transportation",
+                    "shopping"
+                ],
+                correctAnswer: "accommodation",
+                explanation: "The core components of the hospitality industry are food, beverages, and accommodation services."
+            },
+            {
+                id: 'hosp_q6',
+                question: "The hospitality industry is a broad and varied industry ranging from single-person organizations to worldwide _____.",
+                blanks: 1,
+                options: [
+                    "corporations",
+                    "partnerships",
+                    "agencies",
+                    "franchises"
+                ],
+                correctAnswer: "corporations",
+                explanation: "The industry encompasses a wide range of business sizes, from small local firms to large global corporations."
+            },
+            {
+                id: 'hosp_q7',
+                question: "In ancient Greece, guest rights were one of the few established sets of conventions that were universally accepted amongst diverse cultures within the Greek world, known as _____.",
+                blanks: 1,
+                options: [
+                    "Xenia",
+                    "Agape",
+                    "Philia",
+                    "Eros"
+                ],
+                correctAnswer: "Xenia",
+                explanation: "The Greek concept of hospitality towards strangers is known as Xenia."
+            },
+            {
+                id: 'hosp_q8',
+                question: "The 'Golden Age' of hospitality and travel during the 19th century was marked by the construction of grand _____.",
+                blanks: 1,
+                options: [
+                    "hotels",
+                    "railways",
+                    "restaurants",
+                    "cruise ships"
+                ],
+                correctAnswer: "hotels",
+                explanation: "The 19th century saw the construction of many large and luxurious hotels, marking a 'Golden Age' for the industry."
+            },
+            {
+                id: 'hosp_q9',
+                question: "The third hotel industry boom, which occurred in the _____, saw the rise of hotels near airports, for conferences, and for health and ski holidays.",
+                blanks: 1,
+                options: [
+                    "1980s",
+                    "1970s",
+                    "1960s",
+                    "1950s"
+                ],
+                correctAnswer: "1980s",
+                explanation: "The 1980s was a period of significant growth and diversification for the hotel industry."
+            },
+            {
+                id: 'hosp_q10',
+                question: "The _____ witnessed the construction of hotels specifically for business people and the discovery of oil in the Middle East.",
+                blanks: 1,
+                options: [
+                    "1970s",
+                    "1960s",
+                    "1980s",
+                    "1990s"
+                ],
+                correctAnswer: "1970s",
+                explanation: "The 1970s marked a shift towards catering to business travelers, particularly with the oil boom."
+            },
+            {
+                id: 'hosp_q11',
+                question: "In the 1990s, technology began to make an impact, with the development of more sophisticated _____ systems to foster customer loyalty.",
+                blanks: 1,
+                options: [
+                    "reservation",
+                    "accounting",
+                    "management",
+                    "marketing"
+                ],
+                correctAnswer: "reservation",
+                explanation: "Reservation systems became more advanced in the 1990s, allowing hotels to better track customer history and preferences."
+            },
+            {
+                id: 'hosp_q12',
+                question: "Club Méditerranée, which developed the club village concept, was founded in the _____.",
+                blanks: 1,
+                options: [
+                    "1950s",
+                    "1960s",
+                    "1970s",
+                    "1980s"
+                ],
+                correctAnswer: "1950s",
+                explanation: "The club village model was developed by Club Méditerranée in the 1950s."
+            },
+            {
+                id: 'hosp_q13',
+                question: "In the 1960s, new tourist resorts grew up around the Mediterranean, with city and beach hotels thriving in places like ____ and ____.",
+                blanks: 2,
+                options: [
+                    "Spain, Greece",
+                    "France, Italy",
+                    "Egypt, Turkey",
+                    "Morocco, Portugal"
+                ],
+                correctAnswer: "Spain, Greece",
+                explanation: "The 1960s saw a rise in tourist destinations around the Mediterranean, with Spain and Greece being key locations."
+            },
+            {
+                id: 'hosp_q14',
+                question: "Hospitality has existed since man first established permanent _____, as before then, everyone was nomadic.",
+                blanks: 1,
+                options: [
+                    "settlements",
+                    "cities",
+                    "governments",
+                    "religions"
+                ],
+                correctAnswer: "settlements",
+                explanation: "The concept of hospitality requires a fixed location to receive guests."
+            },
+            {
+                id: 'hosp_q15',
+                question: "The principle 'The guest is God' is a key concept in the culture of _____.",
+                blanks: 1,
+                options: [
+                    "India",
+                    "Greece",
+                    "China",
+                    "Egypt"
+                ],
+                correctAnswer: "India",
+                explanation: "This principle reflects the deep-seated cultural importance of hospitality in India."
+            },
+            {
+                id: 'hosp_q16',
+                question: "In the Far East, the development of hotels for business people began in the _____.",
+                blanks: 1,
+                options: [
+                    "1980s",
+                    "1970s",
+                    "1990s",
+                    "1960s"
+                ],
+                correctAnswer: "1980s",
+                explanation: "The 1980s saw the Far East start to develop hotels to cater to a growing number of business travelers."
+            },
+            {
+                id: 'hosp_q17',
+                question: "The term 'hospitality' is also derived from the Latin word ______, meaning 'guest' or 'stranger'.",
+                blanks: 1,
+                options: [
+                    "hospes",
+                    "hospitare",
+                    "hospitium",
+                    "hospice"
+                ],
+                correctAnswer: "hospes",
+                explanation: "Hospes is the Latin word from which hospitium and hospitare are derived, all related to guests."
+            },
+            {
+                id: 'hosp_q18',
+                question: "The hospitality industry includes all facilities that receive visitors and cater for their needs, such as hotels, food services, and _____ services.",
+                blanks: 1,
+                options: [
+                    "transportation",
+                    "medical",
+                    "education",
+                    "manufacturing"
+                ],
+                correctAnswer: "transportation",
+                explanation: "Transportation services like airlines and cruise lines are an integral part of the hospitality industry."
+            },
+            {
+                id: 'hosp_q19',
+                question: "The 'first Property Management Systems' such as Fidelio and Hogatex appeared in the hospitality market during the _____.",
+                blanks: 1,
+                options: [
+                    "1980s",
+                    "1990s",
+                    "1970s",
+                    "2000s"
+                ],
+                correctAnswer: "1980s",
+                explanation: "The rise of computer-based management systems in hotels began in the 1980s."
+            },
+            {
+                id: 'hosp_q20',
+                question: "In the hospitality industry, a crucial element of stewardship towards guests can be seen extensively in ____ passages.",
+                blanks: 1,
+                options: [
+                    "biblical",
+                    "historical",
+                    "legal",
+                    "scientific"
+                ],
+                correctAnswer: "biblical",
+                explanation: "Biblical passages often contain strong examples of hospitality and care for guests."
+            },
+
+            // From 2.0 STRUCTURE OF THE HOSPITALITY INDUSTRY
+            {
+                id: 'hosp_q21',
+                question: "An industry is a group of firms that produce similar or related products, using similar _____.",
+                blanks: 1,
+                options: [
+                    "technology",
+                    "management",
+                    "marketing",
+                    "finance"
+                ],
+                correctAnswer: "technology",
+                explanation: "An industry is defined by shared products and technology used in their production."
+            },
+            {
+                id: 'hosp_q22',
+                question: "Within the hospitality industry, the food services segment can be divided into commercial and _____ segments.",
+                blanks: 1,
+                options: [
+                    "noncommercial",
+                    "corporate",
+                    "public",
+                    "private"
+                ],
+                correctAnswer: "noncommercial",
+                explanation: "Foodservice is categorized into commercial (for-profit) and noncommercial (e.g., institutions) segments."
+            },
+            {
+                id: 'hosp_q23',
+                question: "Hotels, restaurants, and fast-food joints are examples of the hospitality industry's _____ segment.",
+                blanks: 1,
+                options: [
+                    "commercial",
+                    "noncommercial",
+                    "lodging",
+                    "institutional"
+                ],
+                correctAnswer: "commercial",
+                explanation: "The commercial segment includes for-profit businesses like hotels and restaurants."
+            },
+            {
+                id: 'hosp_q24',
+                question: "Within the noncommercial segment, businesses that operate foodservice for companies are called _____.",
+                blanks: 1,
+                options: [
+                    "contractors",
+                    "self-operators",
+                    "franchises",
+                    "caterers"
+                ],
+                correctAnswer: "contractors",
+                explanation: "Contractors are external businesses hired to manage a company's food services."
+            },
+            {
+                id: 'hosp_q25',
+                question: "Companies that hire their own staff to operate their food services are known as _____.",
+                blanks: 1,
+                options: [
+                    "self-operators",
+                    "contractors",
+                    "franchises",
+                    "agencies"
+                ],
+                correctAnswer: "self-operators",
+                explanation: "Self-operators handle their own food service operations without hiring an outside contractor."
+            },
+            {
+                id: 'hosp_q26',
+                question: "The noncommercial segment of foodservice includes schools and universities, the military, health care, and _____.",
+                blanks: 1,
+                options: [
+                    "businesses and industries",
+                    "tourism and travel",
+                    "casinos and nightclubs",
+                    "retail and shopping"
+                ],
+                correctAnswer: "businesses and industries",
+                explanation: "Businesses and industries often provide noncommercial food services as a convenience to employees."
+            },
+            {
+                id: 'hosp_q27',
+                question: "Health-care facilities, such as hospitals and long-term care facilities, offer foodservice as part of their services, falling under the _____ segment.",
+                blanks: 1,
+                options: [
+                    "noncommercial",
+                    "commercial",
+                    "leisure",
+                    "retail"
+                ],
+                correctAnswer: "noncommercial",
+                explanation: "Healthcare institutions are a key component of the noncommercial foodservice sector."
+            },
+            {
+                id: 'hosp_q28',
+                question: "A hotel, lodge, or guesthouse falls under the _____ component of the hospitality industry.",
+                blanks: 1,
+                options: [
+                    "accommodation",
+                    "food services",
+                    "entertainment",
+                    "transportation"
+                ],
+                correctAnswer: "accommodation",
+                explanation: "These facilities provide shelter for people away from home, a core function of the accommodation component."
+            },
+            {
+                id: 'hosp_q29',
+                question: "The food services component of the hospitality industry includes restaurants, fast food joints, delivery services, and _____ catering.",
+                blanks: 1,
+                options: [
+                    "contract",
+                    "private",
+                    "public",
+                    "leisure"
+                ],
+                correctAnswer: "contract",
+                explanation: "Contract catering is a service where food is provided to institutions under a contract."
+            },
+            {
+                id: 'hosp_q30',
+                question: "Special event services in communities, convention centers, and sports stadia are part of the hospitality industry's _____ facilities.",
+                blanks: 1,
+                options: [
+                    "meeting",
+                    "lodging",
+                    "food",
+                    "travel"
+                ],
+                correctAnswer: "meeting",
+                explanation: "These facilities host large-scale gatherings and events, a distinct segment of the industry."
+            },
+            {
+                id: 'hosp_q31',
+                question: "Attraction centers, recreational centers, and entertainment centers are examples of hospitality offerings that cater to a person's desire for _____.",
+                blanks: 1,
+                options: [
+                    "leisure",
+                    "business",
+                    "necessity",
+                    "education"
+                ],
+                correctAnswer: "leisure",
+                explanation: "These centers primarily serve the purpose of recreation and entertainment."
+            },
+            {
+                id: 'hosp_q32',
+                question: "The hospitality industry also includes transportation services by air, rail, sea, and ____.",
+                blanks: 1,
+                options: [
+                    "road",
+                    "space",
+                    "pipeline",
+                    "canal"
+                ],
+                correctAnswer: "road",
+                explanation: "All major forms of transportation that serve travelers are part of the hospitality ecosystem."
+            },
+            {
+                id: 'hosp_q33',
+                question: "The noncommercial foodservice segment supports an institution's primary purpose, such as a hospital feeding patients or a school providing meals to _____.",
+                blanks: 1,
+                options: [
+                    "students",
+                    "customers",
+                    "investors",
+                    "tourists"
+                ],
+                correctAnswer: "students",
+                explanation: "In schools and universities, food services are provided to support the educational mission for students."
+            },
+            {
+                id: 'hosp_q34',
+                question: "Cruise line catering and airline catering are types of food services provided in the hospitality industry's _____ segment.",
+                blanks: 1,
+                options: [
+                    "transportation",
+                    "commercial",
+                    "noncommercial",
+                    "leisure"
+                ],
+                correctAnswer: "transportation",
+                explanation: "These are examples of food services integrated into the transportation sector of the industry."
+            },
+            {
+                id: 'hosp_q35',
+                question: "A 'chop bar' is a type of food service operation, often found in Ghana, that falls under the general category of _____.",
+                blanks: 1,
+                options: [
+                    "restaurants",
+                    "bars",
+                    "motels",
+                    "casinos"
+                ],
+                correctAnswer: "restaurants",
+                explanation: "A chop bar is a local term for an eatery or restaurant."
+            },
+            {
+                id: 'hosp_q36',
+                question: "Within the noncommercial segment, the military provides food services to military personnel, often at clubs, such as an _____ club.",
+                blanks: 1,
+                options: [
+                    "officer's",
+                    "enlisted's",
+                    "soldier's",
+                    "sailor's"
+                ],
+                correctAnswer: "officer's",
+                explanation: "Officer's clubs are a specific example of foodservice provided within the military's noncommercial segment."
+            },
+            {
+                id: 'hosp_q37',
+                question: "One of the reasons for the growth of the accommodation sector is the demand extending beyond traditional seasons, such as hosting _____ during the summer at ski resorts.",
+                blanks: 1,
+                options: [
+                    "conferences",
+                    "festivals",
+                    "competitions",
+                    "holidays"
+                ],
+                correctAnswer: "conferences",
+                explanation: "Conferences and events help to extend the demand for lodging beyond peak seasons."
+            },
+            {
+                id: 'hosp_q38',
+                question: "The hospitality industry's scope is broad, including not only hotels and restaurants but also other institutions that offer shelter, food, and _____.",
+                blanks: 1,
+                options: [
+                    "entertainment",
+                    "education",
+                    "medical care",
+                    "banking"
+                ],
+                correctAnswer: "entertainment",
+                explanation: "Entertainment is a key component of the industry, alongside food and accommodation."
+            },
+            {
+                id: 'hosp_q39',
+                question: "The commercial food service segment is primarily for-profit, while the noncommercial segment exists to support an organization's main _____.",
+                blanks: 1,
+                options: [
+                    "purpose",
+                    "profit",
+                    "product",
+                    "brand"
+                ],
+                correctAnswer: "purpose",
+                explanation: "The noncommercial segment is mission-driven, not profit-driven."
+            },
+            {
+                id: 'hosp_q40',
+                question: "In the noncommercial foodservice segment, businesses often offer cafeterias, executive dining rooms, and _____ as a convenience to employees.",
+                blanks: 1,
+                options: [
+                    "vending machines",
+                    "fine dining",
+                    "drive-thrus",
+                    "delivery services"
+                ],
+                correctAnswer: "vending machines",
+                explanation: "Vending machines are a common example of a convenience food service provided in a business or industry setting."
+            },
+
+            // From 3.0 THE MAIN COMPONENTS OF THE HOSPITALITY INDUSTRY
+            {
+                id: 'hosp_q41',
+                question: "Accommodation is one of the largest and fastest growing sectors in the tourism industry due to the growth of large chains and increased interest in vacation or _____ concepts.",
+                blanks: 1,
+                options: [
+                    "time-share",
+                    "franchise",
+                    "motel",
+                    "hostel"
+                ],
+                correctAnswer: "time-share",
+                explanation: "Time-share concepts have become increasingly popular, contributing to the growth of the accommodation sector."
+            },
+            {
+                id: 'hosp_q42',
+                question: "Deluxe, airport, and convention hotels are generally located in urban centers and are often large, with over _____ rooms.",
+                blanks: 1,
+                options: [
+                    "150",
+                    "50",
+                    "100",
+                    "200"
+                ],
+                correctAnswer: "150",
+                explanation: "These types of hotels are typically large-scale operations with many rooms to accommodate a high volume of guests."
+            },
+            {
+                id: 'hosp_q43',
+                question: "All-suite hotels are popular because each unit contains the same facilities as an apartment, including a private place for meetings and a _____ for cooking meals.",
+                blanks: 1,
+                options: [
+                    "kitchen",
+                    "lounge",
+                    "balcony",
+                    "gym"
+                ],
+                correctAnswer: "kitchen",
+                explanation: "The apartment-like features, including a kitchen, are a key selling point of all-suite hotels."
+            },
+            {
+                id: 'hosp_q44',
+                question: "A key advantage of working for a hotel chain is the ability to transfer to other properties in the _____.",
+                blanks: 1,
+                options: [
+                    "chain",
+                    "country",
+                    "city",
+                    "industry"
+                ],
+                correctAnswer: "chain",
+                explanation: "Working for a chain offers employees more career mobility within the same company."
+            },
+            {
+                id: 'hosp_q45',
+                question: "Resort hotels and lodges are usually located in or near recreational sites and are designed to offer a wide range of activities and _____.",
+                blanks: 1,
+                options: [
+                    "entertainment",
+                    "business services",
+                    "health care",
+                    "educational programs"
+                ],
+                correctAnswer: "entertainment",
+                explanation: "Resort hotels are focused on leisure and recreation, providing various entertainment options."
+            },
+            {
+                id: 'hosp_q46',
+                question: "One of the disadvantages of the hospitality industry is the long and _____ working hours.",
+                blanks: 1,
+                options: [
+                    "irregular",
+                    "regular",
+                    "short",
+                    "fixed"
+                ],
+                correctAnswer: "irregular",
+                explanation: "Hospitality businesses often operate around the clock, leading to long and non-standard working hours for staff."
+            },
+            {
+                id: 'hosp_q47',
+                question: "The hospitality industry offers many relatively low-skilled entry-level jobs with low starting salaries, with the exception of management or positions requiring fluency of languages or specific _____.",
+                blanks: 1,
+                options: [
+                    "skills",
+                    "friends",
+                    "connections",
+                    "experience"
+                ],
+                correctAnswer: "skills",
+                explanation: "Specialized roles or management positions typically offer higher pay, while entry-level jobs do not."
+            },
+            {
+                id: 'hosp_q48',
+                question: "One of the negative perceptions of jobs in the hospitality industry is the feeling of 'being a servant to others', which can lead to low job _____.",
+                blanks: 1,
+                options: [
+                    "status",
+                    "satisfaction",
+                    "salary",
+                    "security"
+                ],
+                correctAnswer: "status",
+                explanation: "Misperceptions about job status can discourage people from pursuing careers in the industry."
+            },
+            {
+                id: 'hosp_q49',
+                question: "A disadvantage of the hospitality industry is the high level of staff _____, which makes it difficult for businesses to maintain high standards of service.",
+                blanks: 1,
+                options: [
+                    "turnover",
+                    "training",
+                    "morale",
+                    "productivity"
+                ],
+                correctAnswer: "turnover",
+                explanation: "High employee turnover is a common challenge in the industry, impacting service consistency."
+            },
+            {
+                id: 'hosp_q50',
+                question: "The accommodation sector has seen increased interest in Ghana as a travel _____.",
+                blanks: 1,
+                options: [
+                    "destination",
+                    "market",
+                    "source",
+                    "origin"
+                ],
+                correctAnswer: "destination",
+                explanation: "The document notes a growing interest in Ghana as a place for tourists to visit."
+            },
+            {
+                id: 'hosp_q51',
+                question: "The hospitality industry can be segmented based on its main components, which are accommodation and _____.",
+                blanks: 1,
+                options: [
+                    "food services",
+                    "transportation",
+                    "recreation",
+                    "entertainment"
+                ],
+                correctAnswer: "food services",
+                explanation: "Accommodation and food services are the two main, core components of the hospitality industry."
+            },
+            {
+                id: 'hosp_q52',
+                question: "A privately owned hotel is often smaller than a chain hotel and may also contain a cafe or _____.",
+                blanks: 1,
+                options: [
+                    "restaurant",
+                    "casino",
+                    "club",
+                    "shopping mall"
+                ],
+                correctAnswer: "restaurant",
+                explanation: "Smaller hotels often include a food and beverage outlet for guests."
+            },
+            {
+                id: 'hosp_q53',
+                question: "A lack of job security is one of the resistances for people in starting their careers in this industry, primarily due to the dependence on seasonal demand and economic _____.",
+                blanks: 1,
+                options: [
+                    "fluctuations",
+                    "growth",
+                    "stability",
+                    "prosperity"
+                ],
+                correctAnswer: "fluctuations",
+                explanation: "The industry is sensitive to economic changes, which can impact job security."
+            },
+            {
+                id: 'hosp_q54',
+                question: "One of the key advantages of working in the hospitality industry is the opportunity for career advancement and acquiring new _____.",
+                blanks: 1,
+                options: [
+                    "skills",
+                    "debts",
+                    "complaints",
+                    "penalties"
+                ],
+                correctAnswer: "skills",
+                explanation: "The dynamic nature of the industry provides many opportunities for learning and professional growth."
+            },
+            {
+                id: 'hosp_q55',
+                question: "A high-end hotel with a wide range of facilities and services, often over 150 rooms, is typically categorized as a _____ hotel.",
+                blanks: 1,
+                options: [
+                    "deluxe",
+                    "budget",
+                    "motel",
+                    "hostel"
+                ],
+                correctAnswer: "deluxe",
+                explanation: "Deluxe hotels are the luxury tier, characterized by size and extensive amenities."
+            },
+            {
+                id: 'hosp_q56',
+                question: "The accommodation industry is experiencing growth due to the increased popularity of vacation or time-share concepts, where people can purchase the right to use a property for a specified period of _____.",
+                blanks: 1,
+                options: [
+                    "time",
+                    "money",
+                    "service",
+                    "product"
+                ],
+                correctAnswer: "time",
+                explanation: "Time-share ownership gives people the right to use a vacation property at a specific time of the year."
+            },
+            {
+                id: 'hosp_q57',
+                question: "The food services sector includes not only dining establishments but also airline catering and _____ line catering.",
+                blanks: 1,
+                options: [
+                    "cruise",
+                    "freight",
+                    "bus",
+                    "train"
+                ],
+                correctAnswer: "cruise",
+                explanation: "Cruise ships offer a comprehensive food service component to their passengers."
+            },
+            {
+                id: 'hosp_q58',
+                question: "The low starting salaries in the hospitality industry are often for roles that are relatively _____.",
+                blanks: 1,
+                options: [
+                    "low-skilled",
+                    "high-skilled",
+                    "managerial",
+                    "specialized"
+                ],
+                correctAnswer: "low-skilled",
+                explanation: "Entry-level positions that require minimal experience or training tend to have lower starting wages."
+            },
+            {
+                id: 'hosp_q59',
+                question: "Resort hotels and lodges are often located in or near areas with natural beauty, such as mountains, beaches, or _____.",
+                blanks: 1,
+                options: [
+                    "forests",
+                    "cities",
+                    "factories",
+                    "airports"
+                ],
+                correctAnswer: "forests",
+                explanation: "Resorts are designed to be destinations for leisure and recreation, often in scenic locations."
+            },
+            {
+                id: 'hosp_q60',
+                question: "The food services component of the hospitality industry also includes bars, night clubs, and _____.",
+                blanks: 1,
+                options: [
+                    "casinos",
+                    "museums",
+                    "libraries",
+                    "hospitals"
+                ],
+                correctAnswer: "casinos",
+                explanation: "Casinos, as part of the entertainment sector, often include significant food and beverage operations."
+            },
+
+            // From 4.0 CHARACTERISTICS OF THE HOSPITALITY INDUSTRY AND ITS PRODUCT
+            {
+                id: 'hosp_q61',
+                question: "The hospitality industry is unique because its products are more of services than tangible _____.",
+                blanks: 1,
+                options: [
+                    "goods",
+                    "assets",
+                    "features",
+                    "brands"
+                ],
+                correctAnswer: "goods",
+                explanation: "Hospitality primarily deals with providing intangible services, unlike manufacturing which deals with tangible goods."
+            },
+            {
+                id: 'hosp_q62',
+                question: "In the hospitality industry, a customer's experience is a mix of tangible features, such as a steak, and intangible features, such as the comfortable dining _____.",
+                blanks: 1,
+                options: [
+                    "atmosphere",
+                    "table",
+                    "chair",
+                    "utensils"
+                ],
+                correctAnswer: "atmosphere",
+                explanation: "The intangible experience, like a pleasant atmosphere or friendly staff, is a key part of the hospitality product."
+            },
+            {
+                id: 'hosp_q63',
+                question: "The qualities of staff and the way they deliver the service are often more important than the tangible products in making a hospitality experience _____ or _____.",
+                blanks: 2,
+                options: [
+                    "satisfactory, unsatisfactory",
+                    "cheap, expensive",
+                    "fast, slow",
+                    "good, bad"
+                ],
+                correctAnswer: "satisfactory, unsatisfactory",
+                explanation: "The quality of service delivery has a direct impact on customer satisfaction."
+            },
+            {
+                id: 'hosp_q64',
+                question: "Hospitality services are considered _____ because they cannot be inventoried or stored for future consumption.",
+                blanks: 1,
+                options: [
+                    "perishable",
+                    "durable",
+                    "tangible",
+                    "consistent"
+                ],
+                correctAnswer: "perishable",
+                explanation: "The concept of perishability means that if a service is not used at a given time, its value is lost forever."
+            },
+            {
+                id: 'hosp_q65',
+                question: "An example of a perishable service is an unsold airplane seat; the revenue from that seat is _____ forever.",
+                blanks: 1,
+                options: [
+                    "lost",
+                    "saved",
+                    "deferred",
+                    "collected"
+                ],
+                correctAnswer: "lost",
+                explanation: "Once the plane takes off, an unsold seat cannot be sold the next day."
+            },
+            {
+                id: 'hosp_q66',
+                question: "To reduce the risk of perishability, hotels and airlines often charge guests holding guaranteed reservations even if they fail to _____ in.",
+                blanks: 1,
+                options: [
+                    "check",
+                    "book",
+                    "pay",
+                    "cancel"
+                ],
+                correctAnswer: "check",
+                explanation: "Charging a fee for a no-show helps to recoup some of the lost revenue from a perishable service."
+            },
+            {
+                id: 'hosp_q67',
+                question: "Another strategy to deal with perishability is offering heavy discounts during the _____ season to attract more customers.",
+                blanks: 1,
+                options: [
+                    "off-season",
+                    "peak-season",
+                    "mid-season",
+                    "high-season"
+                ],
+                correctAnswer: "off-season",
+                explanation: "Discounts encourage demand during less popular times to avoid losing revenue from unsold services."
+            },
+            {
+                id: 'hosp_q68',
+                question: "The characteristic of 'lack of consistency' in the hospitality industry is a major cause of customer _____.",
+                blanks: 1,
+                options: [
+                    "dissatisfaction",
+                    "satisfaction",
+                    "loyalty",
+                    "retention"
+                ],
+                correctAnswer: "dissatisfaction",
+                explanation: "Variability in service quality from one experience to another can be frustrating for customers."
+            },
+            {
+                id: 'hosp_q69',
+                question: "Maintaining consistency can be achieved through careful monitoring of customer satisfaction and feedback, and thorough training of _____.",
+                blanks: 1,
+                options: [
+                    "staff",
+                    "products",
+                    "facilities",
+                    "management"
+                ],
+                correctAnswer: "staff",
+                explanation: "A well-trained and consistent staff is crucial for providing a predictable and high-quality service experience."
+            },
+            {
+                id: 'hosp_q70',
+                question: "The hospitality industry is often described as being labor-intensive, as it requires a large number of employees to deliver a personalized _____.",
+                blanks: 1,
+                options: [
+                    "service",
+                    "product",
+                    "item",
+                    "good"
+                ],
+                correctAnswer: "service",
+                explanation: "Labor-intensive means that a high number of human resources are needed to produce and deliver the service."
+            },
+            {
+                id: 'hosp_q71',
+                question: "The hospitality product is generally a combination of tangible and intangible elements, making it a 'product-service ____'.",
+                blanks: 1,
+                options: [
+                    "mix",
+                    "blend",
+                    "combo",
+                    "fusion"
+                ],
+                correctAnswer: "mix",
+                explanation: "The overall product is a mix of both physical items and the service provided."
+            },
+            {
+                id: 'hosp_q72',
+                question: "The perishable nature of services means that the opportunity at a specific time is _____ forever if not consumed.",
+                blanks: 1,
+                options: [
+                    "lost",
+                    "delayed",
+                    "postponed",
+                    "extended"
+                ],
+                correctAnswer: "lost",
+                explanation: "Services cannot be saved, so the chance to sell them is gone if they are not purchased."
+            },
+            {
+                id: 'hosp_q73',
+                question: "A well-groomed service staff and the decoration of a restaurant are examples of _____ features of a hospitality experience.",
+                blanks: 1,
+                options: [
+                    "tangible",
+                    "intangible",
+                    "perishable",
+                    "consistent"
+                ],
+                correctAnswer: "tangible",
+                explanation: "Tangible features are the physical elements that can be seen or touched."
+            },
+            {
+                id: 'hosp_q74',
+                question: "The friendly attitude of staff and a comfortable dining atmosphere are examples of _____ features of a hospitality experience.",
+                blanks: 1,
+                options: [
+                    "intangible",
+                    "tangible",
+                    "perishable",
+                    "consistent"
+                ],
+                correctAnswer: "intangible",
+                explanation: "Intangible features are non-physical aspects of the service experience, such as emotions and feelings."
+            },
+            {
+                id: 'hosp_q75',
+                question: "Hospitality and tourism organizations that strive to provide _____ services are more likely to succeed.",
+                blanks: 1,
+                options: [
+                    "consistent",
+                    "inconsistent",
+                    "irregular",
+                    "unpredictable"
+                ],
+                correctAnswer: "consistent",
+                explanation: "Consistency builds trust and customer loyalty, which are vital for success."
+            },
+            {
+                id: 'hosp_q76',
+                question: "The perishability of services is a major challenge for the industry, as it can lead to a loss of _____ if services are not sold at the right time.",
+                blanks: 1,
+                options: [
+                    "revenue",
+                    "customers",
+                    "employees",
+                    "resources"
+                ],
+                correctAnswer: "revenue",
+                explanation: "Unsold services result in lost income for the business."
+            },
+            {
+                id: 'hosp_q77',
+                question: "The high degree of interaction between staff and customers is a characteristic of the hospitality industry that emphasizes the importance of good _____.",
+                blanks: 1,
+                options: [
+                    "service",
+                    "product",
+                    "equipment",
+                    "technology"
+                ],
+                correctAnswer: "service",
+                explanation: "The quality of the service is often a direct result of the interaction between staff and guests."
+            },
+            {
+                id: 'hosp_q78',
+                question: "A travel agent or tour operator who does not make the required sales on a particular day has lost the _____ at that time forever.",
+                blanks: 1,
+                options: [
+                    "opportunity",
+                    "customer",
+                    "commission",
+                    "profit"
+                ],
+                correctAnswer: "opportunity",
+                explanation: "The perishable nature of tourism services means that the chance to sell is time-sensitive and cannot be recovered."
+            },
+            {
+                id: 'hosp_q79',
+                question: "A hospitality product consists of both a core product and a set of _____ services that enhance the customer's experience.",
+                blanks: 1,
+                options: [
+                    "supporting",
+                    "core",
+                    "basic",
+                    "standard"
+                ],
+                correctAnswer: "supporting",
+                explanation: "Supporting services, like a hotel's gym or a restaurant's ambiance, add value to the core product."
+            },
+            {
+                id: 'hosp_q80',
+                question: "A high-class restaurant may charge a fee to customers who do not show up for a reservation, a practice aimed at reducing the risk of _____.",
+                blanks: 1,
+                options: [
+                    "perishability",
+                    "dissatisfaction",
+                    "competition",
+                    "turnover"
+                ],
+                correctAnswer: "perishability",
+                explanation: "Charging for no-shows helps offset the financial loss from an unsold, perishable service."
+            },
+        ];
+
+        let questionsToAsk = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestionsPerSession = 20; // Changed to 20 questions per session
+        let userName = "Guest";
+        let challengedSharerName = null;
+        let challengedSharerScore = null;
+        let challengedSharerAvgSpeed = null;
+        let challengedSharerProficiency = null;
+        let timerInterval;
+        let timeLeft = 35; // Changed to 35 seconds
+        let questionStartTime;
+        let totalTimeTaken = 0;
+        let wrongAnswersLog = [];
+
+        // --- DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const userNameInput = document.getElementById('user-name-input');
+        const challengeIntroScreen = document.getElementById('challenge-intro-screen');
+        const challengerNameDisplay = document.getElementById('challenger-name-display');
+        const challengerScoreDisplay = document.getElementById('challenger-score-display');
+        const challengerTotalDisplay = document.getElementById('challenger-total-display');
+        const challengerSpeedDisplay = document.getElementById('challenger-speed-display');
+        const challengerProficiencyDisplay = document.getElementById('challenger-proficiency-display');
+        const challengerNameInput = document.getElementById('challenger-name-input');
+        const startChallengeButton = document.getElementById('start-challenge-button');
+        const quizScreen = document.getElementById('quiz-screen');
+        const scoreCard = document.getElementById('score-card');
+        const startButton = document.getElementById('start-button');
+        const restartButton = document.getElementById('restart-button');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCountDisplay = document.getElementById('question-count');
+        const timerText = document.getElementById('timer-text');
+        const timerBar = document.getElementById('timer-bar');
+        const scoreTextEl = document.getElementById('score-text');
+        const scoreReview = document.getElementById('score-review');
+        const scoreIconDisplay = document.getElementById('score-icon-display');
+        const quizAppContainer = document.getElementById('quiz-app');
+        const shareWhatsappButton = document.getElementById('share-whatsapp');
+        const shareFacebookButton = document.getElementById('share-facebook');
+        const sharePinterestButton = document.getElementById('share-pinterest');
+        const shareTeamsButton = document.getElementById('share-teams');
+        const shareSection = document.getElementById('share-section');
+        const challengeOutcomeMessage = document.getElementById('challenge-outcome-message');
+        const averageSpeedDisplay = document.getElementById('average-speed-display');
+        const proficiencyScoreDisplay = document.getElementById('proficiency-score-display');
+        const reviewAnswersButton = document.getElementById('review-answers-button');
+        const wrongAnswersModal = document.getElementById('wrong-answers-modal');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+
+        // New Guide Modal DOM elements
+        const guideModal = document.getElementById('guide-modal');
+        const demoFillButton = document.getElementById('demo-fill-button');
+        const demoBlankText = document.getElementById('demo-blank-text');
+        const closeGuideButton = document.getElementById('close-guide-button');
+
+
+        // --- SVG Icons for score card ---
+        const scoreIcons = {
+            trophy: `<svg class="score-icon text-amber-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 001.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>`,
+            medal: `<svg class="score-icon text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>`,
+            star: `<svg class="score-icon text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`,
+            brain: `<svg class="score-icon text-pink-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 3.5a5.5 5.5 0 00-5.5 5.5c0 1.258.468 2.41 1.25 3.317V17.5a.5.5 0 00.5.5h7.5a.5.5 0 00.5-.5v-5.183c.782-.907 1.25-2.06 1.25-3.317A5.5 5.5 0 0010 3.5zM8.5 12.5a.5.5 0 01-.5-.5V11a.5.5 0 011 0v1a.5.5 0 01-.5.5zm3 0a.5.5 0 01-.5-.5V11a.5.5 0 011 0v1a.5.5 0 01-.5.5z"></path><path d="M10 2a1 1 0 00-1 1v.5a.5.5 0 001 0V3a1 1 0 00-1-1z"></path></svg>`,
+            book: `<svg class="score-icon text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 11-2 0V4a1 1 0 00-1-1H7a1 1 0 00-1 1v12a1 1 0 11-2 0V4z" clip-rule="evenodd"></path></svg>`
+        };
+
+        // --- Utility Functions ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function showModalMessage(message) {
+            const modal = document.createElement('div');
+            modal.classList.add('fixed', 'inset-0', 'bg-gray-800', 'bg-opacity-75', 'flex', 'items-center', 'justify-center', 'z-50', 'p-4', 'modal-overlay');
+            modal.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl text-center max-w-sm mx-auto modal-content">
+                    <p class="text-lg font-semibold mb-4">${message}</p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="this.parentNode.parentNode.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Function to get color based on percentage for dashboard
+        function getScoreColor(percentage) {
+            if (percentage >= 90) return 'text-green-600';
+            if (percentage >= 75) return 'text-lime-600';
+            if (percentage >= 50) return 'text-yellow-600';
+            if (percentage >= 25) return 'text-orange-600';
+            return 'text-red-600';
+        }
+
+        // --- Quiz Flow Functions ---
+        function startGame(isChallenge = false) {
+            let nameInputSource = isChallenge ? challengerNameInput : userNameInput;
+            userName = nameInputSource.value.trim();
+
+            if (!userName) {
+                showModalMessage("Please enter your name to start the quiz!");
+                return;
+            }
+            if (userName.length > 30) {
+                showModalMessage("Name cannot exceed 30 characters.");
+                return;
+            }
+
+            currentQuestionIndex = 0;
+            score = 0;
+            totalTimeTaken = 0;
+            wrongAnswersLog = [];
+
+            shuffleArray(allQuestions);
+            questionsToAsk = allQuestions.slice(0, totalQuestionsPerSession);
+
+            startScreen.classList.add('hidden');
+            challengeIntroScreen.classList.add('hidden');
+            scoreCard.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            displayQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 35; // Set timer to 35 seconds
+            questionStartTime = Date.now();
+            
+            timerText.textContent = `Time: ${timeLeft}s`;
+            timerBar.style.width = '100%';
+            timerBar.classList.remove('time-low-pulse', 'bg-red-500');
+            timerBar.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-blue-500');
+
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerText.textContent = `Time: ${timeLeft}s`;
+                const percentageLeft = (timeLeft / 35) * 100; // Calculate percentage based on 35s
+                timerBar.style.width = `${percentageLeft}%`;
+
+                if (timeLeft <= 5 && !timerBar.classList.contains('time-low-pulse')) {
+                    timerBar.classList.remove('bg-gradient-to-r', 'from-indigo-500', 'to-blue-500');
+                    timerBar.classList.add('time-low-pulse', 'bg-red-500');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+        
+        function handleTimeout() {
+            const timeTaken = (Date.now() - questionStartTime) / 1000;
+            totalTimeTaken += timeTaken;
+
+            const questionData = questionsToAsk[currentQuestionIndex];
+            wrongAnswersLog.push({
+                question: questionData.question,
+                userAnswer: "Timed Out / No Answer",
+                correctAnswer: questionData.correctAnswer,
+                explanation: questionData.explanation
+            });
+
+            disableOptions(null);
+            moveToNextQuestion();
+        }
+
+        function disableOptions(selectedButton) {
+            const buttons = optionsContainer.querySelectorAll('.option-button');
+            const correctAnswerText = questionsToAsk[currentQuestionIndex].correctAnswer;
+
+            buttons.forEach(button => {
+                button.classList.add('disabled', 'opacity-70');
+                button.onclick = null;
+                
+                if (button.textContent === correctAnswerText) {
+                    button.classList.add('correct');
+                } else if (button === selectedButton) {
+                    button.classList.add('incorrect');
+                }
+            });
+        }
+
+        function moveToNextQuestion() {
+            // Fade out current question and options
+            questionText.style.opacity = '0';
+            optionsContainer.style.opacity = '0';
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                displayQuestion();
+            }, 1500); // Wait 1.5 seconds before showing the next question
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex < totalQuestionsPerSession) {
+                startTimer();
+                const question = questionsToAsk[currentQuestionIndex];
+                
+                const shuffledOptions = [...question.options];
+                shuffleArray(shuffledOptions);
+
+                // Render question with blanks
+                questionText.innerHTML = ''; // Clear previous content
+                const parts = question.question.split('_____');
+                const fragment = document.createDocumentFragment();
+
+                parts.forEach((part, index) => {
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = part;
+                    fragment.appendChild(textSpan);
+
+                    if (index < question.blanks) {
+                        const blankSpan = document.createElement('span');
+                        blankSpan.classList.add('blank-placeholder');
+                        blankSpan.textContent = '____'; // Placeholder text
+                        fragment.appendChild(blankSpan);
+                    }
+                });
+                questionText.appendChild(fragment);
+
+                // Render options
+                optionsContainer.innerHTML = '';
+                shuffledOptions.forEach(optionText => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-button');
+                    button.textContent = optionText;
+                    button.onclick = () => selectAnswer(button);
+                    optionsContainer.appendChild(button);
+                });
+
+                questionCountDisplay.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestionsPerSession}`;
+
+                // Fade in new question and options
+                questionText.style.transition = 'opacity 0.5s ease-in-out';
+                optionsContainer.style.transition = 'opacity 0.5s ease-in-out';
+                questionText.style.opacity = '1';
+                optionsContainer.style.opacity = '1';
+            } else {
+                showScoreCard();
+            }
+        }
+        
+        function selectAnswer(selectedButton) {
+            clearInterval(timerInterval);
+            
+            const timeTaken = (Date.now() - questionStartTime) / 1000;
+            totalTimeTaken += timeTaken;
+
+            const questionData = questionsToAsk[currentQuestionIndex];
+            const correctAnswerText = questionData.correctAnswer;
+            const isCorrect = selectedButton.textContent === correctAnswerText;
+
+            // Animate words into blanks
+            const blankPlaceholders = questionText.querySelectorAll('.blank-placeholder');
+            const wordsToFill = selectedButton.textContent.split(',').map(word => word.trim());
+
+            blankPlaceholders.forEach((blank, index) => {
+                if (wordsToFill[index]) {
+                    blank.textContent = wordsToFill[index];
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+            } else {
+                wrongAnswersLog.push({
+                    question: questionData.question,
+                    userAnswer: selectedButton.textContent,
+                    correctAnswer: questionData.correctAnswer,
+                    explanation: questionData.explanation
+                });
+            }
+            disableOptions(selectedButton);
+            
+            moveToNextQuestion();
+        }
+
+        function showScoreCard() {
+            quizScreen.classList.add('hidden');
+            scoreCard.classList.remove('hidden');
+            scoreCard.classList.add('show');
+            shareSection.classList.remove('hidden');
+
+            const scorePercentage = (score / totalQuestionsPerSession) * 100;
+            const averageSpeed = totalQuestionsPerSession > 0 ? (totalTimeTaken / totalQuestionsPerSession).toFixed(2) : 0;
+            const proficiencyScore = scorePercentage;
+
+            scoreTextEl.textContent = `${userName}, you scored ${score} out of ${totalQuestionsPerSession}!`;
+            averageSpeedDisplay.textContent = `Average Speed: ${averageSpeed} seconds per question`;
+            proficiencyScoreDisplay.textContent = `Knowledge Proficiency: ${proficiencyScore.toFixed(0)}%`;
+            proficiencyScoreDisplay.className = `text-lg font-bold mb-4 ${getScoreColor(proficiencyScore)}`;
+
+
+            let reviewMessage = '';
+            let iconSvg = '';
+
+            if (scorePercentage === 100) {
+                reviewMessage = "Flawless Victory! You've mastered the material. You're ready for any challenge!";
+                iconSvg = scoreIcons.trophy;
+            } else if (scorePercentage >= 90) {
+                reviewMessage = "Outstanding! You have an expert-level grasp of these topics. Well done!";
+                iconSvg = scoreIcons.medal;
+            } else if (scorePercentage >= 75) {
+                reviewMessage = "Excellent work! Your knowledge is impressive. Keep up the great momentum!";
+                iconSvg = scoreIcons.star;
+            } else if (scorePercentage >= 50) {
+                reviewMessage = "Good job! You're on the right track. A little more practice and you'll be an expert.";
+                iconSvg = scoreIcons.brain;
+            } else {
+                reviewMessage = "Nice try! This was great practice. Keep reviewing the topics to be fully prepared for the real test on paper.";
+                iconSvg = scoreIcons.book;
+            }
+
+            scoreReview.textContent = reviewMessage;
+            scoreIconDisplay.innerHTML = iconSvg;
+
+            if (challengedSharerName && challengedSharerScore !== null) {
+                handleChallengeOutcome(averageSpeed, proficiencyScore);
+            }
+        }
+        
+        function handleChallengeOutcome(myAvgSpeed, myProficiency) {
+            shareSection.classList.add('hidden');
+            challengeOutcomeMessage.classList.remove('hidden');
+            let outcomeText = "";
+            
+            if (score > challengedSharerScore) {
+                outcomeText = `🎉 Congratulations! You beat ${challengedSharerName}'s score of ${challengedSharerScore}!`;
+            } else if (score === challengedSharerScore) {
+                if (myAvgSpeed < challengedSharerAvgSpeed) {
+                    outcomeText = `🚀 Amazing! You matched ${challengedSharerName}'s score of ${challengedSharerScore} AND were faster!`;
+                } else if (myProficiency > challengedSharerProficiency) {
+                     outcomeText = `🧠 Fantastic! You matched ${challengedSharerName}'s score of ${challengedSharerScore} and showed higher proficiency!`;
+                }
+                else if (myAvgSpeed === challengedSharerAvgSpeed && myProficiency === challengedSharerProficiency) {
+                    outcomeText = `🤝 You matched ${challengedSharerName}'s score of ${challengedSharerScore} and speed! A true competitor!`;
+                } else {
+                    outcomeText = `🤝 You matched ${challengedSharerName}'s score of ${challengedSharerScore}!`;
+                }
+            } else {
+                outcomeText = `Keep going! You didn't beat ${challengedSharerName}'s score of ${challengedSharerScore} this time.`;
+            }
+            challengeOutcomeMessage.textContent = outcomeText;
+            
+            // Clear challenge specific variables after outcome is displayed
+            challengedSharerName = null;
+            challengedSharerScore = null;
+            challengedSharerAvgSpeed = null;
+            challengedSharerProficiency = null;
+            challengerSpeedDisplay.textContent = "";
+            challengerProficiencyDisplay.textContent = "";
+            challengerTotalDisplay.textContent = ""; // Clear total questions display
+        }
+
+        function resetQuiz() {
+            scoreCard.classList.remove('show');
+            
+            setTimeout(() => {
+                userNameInput.value = "";
+                challengerNameInput.value = "";
+                startScreen.classList.remove('hidden');
+                challengeIntroScreen.classList.add('hidden');
+                quizScreen.classList.add('hidden');
+                scoreCard.classList.add('hidden');
+                challengeOutcomeMessage.classList.add('hidden');
+                averageSpeedDisplay.textContent = ""; 
+                proficiencyScoreDisplay.textContent = ""; 
+                proficiencyScoreDisplay.classList.remove('text-red-600', 'text-orange-600', 'text-yellow-600', 'text-lime-600', 'text-green-600');
+                proficiencyScoreDisplay.classList.add('text-lg', 'font-bold', 'mb-4');
+                
+            }, 500);
+        }
+
+        // --- Share Functions ---
+        function getShareUrl() {
+            const currentAvgSpeed = totalQuestionsPerSession > 0 ? (totalTimeTaken / totalQuestionsPerSession).toFixed(2) : 0;
+            const currentProficiency = (score / totalQuestionsPerSession) * 100;
+
+            const params = new URLSearchParams();
+            params.set('cn', encodeURIComponent(userName)); // Challenger Name (cn)
+            params.set('cs', score); // Challenger Score (cs)
+            params.set('ct', totalQuestionsPerSession); // Challenger Total Questions (ct)
+            params.set('ca', currentAvgSpeed); // Challenger Average Speed (ca)
+            params.set('cp', currentProficiency.toFixed(0)); // Challenger Proficiency
+
+            return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+        }
+
+        function getShareText() {
+            const currentProficiency = (score / totalQuestionsPerSession) * 100;
+            let achievement = "";
+            if (currentProficiency === 100) achievement = "a perfect score";
+            else if (currentProficiency >= 90) achievement = "an outstanding score";
+            else if (currentProficiency >= 75) achievement = "an excellent score";
+            else if (currentProficiency >= 50) achievement = "a good score";
+            else achievement = "a solid score";
+
+            return encodeURIComponent(`${userName} achieved ${achievement} (${score}/${totalQuestionsPerSession}) on the Hospitality Industry Quiz! Think you can beat my score?`);
+        }
+        
+        function setupShareListeners() {
+            const shareButtons = [
+                { el: shareWhatsappButton, getUrl: () => `https://wa.me/?text=${getShareText()}%0A${encodeURIComponent(getShareUrl())}` },
+                { el: shareFacebookButton, getUrl: () => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}&quote=${getShareText()}` },
+                { el: sharePinterestButton, getUrl: () => `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(getShareUrl())}&description=${getShareText()}` },
+                { el: shareTeamsButton, getUrl: () => `https://teams.microsoft.com/share?msgText=${getShareText()}&mask=false&href=${encodeURIComponent(getShareUrl())}` }
+            ];
+            shareButtons.forEach(btn => {
+                btn.el.onclick = () => {
+                    window.open(btn.getUrl(), '_blank');
+                };
+            });
+        }
+
+        // --- Challenge Logic ---
+        function checkChallengeInUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            const name = urlParams.get('cn'); // Challenger Name (cn)
+            const scoreParam = urlParams.get('cs'); // Challenger Score (cs)
+            const totalParam = urlParams.get('ct'); // Challenger Total Questions (ct)
+            const speedParam = urlParams.get('ca'); // Challenger Average Speed (ca)
+            const proficiencyParam = urlParams.get('cp'); // Challenger Proficiency (cp)
+
+            if (name && scoreParam !== null && totalParam !== null && speedParam !== null && proficiencyParam !== null) {
+                challengedSharerName = decodeURIComponent(name);
+                challengedSharerScore = parseInt(scoreParam);
+                challengedSharerAvgSpeed = parseFloat(speedParam);
+                challengedSharerProficiency = parseFloat(proficiencyParam);
+
+                startScreen.classList.add('hidden');
+                challengeIntroScreen.classList.remove('hidden');
+                
+                challengerNameDisplay.textContent = challengedSharerName;
+                challengerScoreDisplay.textContent = challengedSharerScore;
+                challengerTotalDisplay.textContent = totalParam; // Display total questions challenged on
+                
+                challengerScoreDisplay.classList.add(getScoreColor((challengedSharerScore / parseInt(totalParam)) * 100));
+
+                challengerSpeedDisplay.textContent = `Average Speed: ${challengedSharerAvgSpeed} seconds/question`;
+                challengerProficiencyDisplay.textContent = `Knowledge Proficiency: ${challengedSharerProficiency}%`;
+                challengerProficiencyDisplay.classList.add(getScoreColor(challengedSharerProficiency));
+                
+            } else {
+                startScreen.classList.remove('hidden');
+                challengeIntroScreen.classList.add('hidden'); // Ensure hidden if not a challenge
+            }
+        }
+
+        // --- Wrong Answers Review Modal Functions ---
+        function showWrongAnswersModal() {
+            wrongAnswersList.innerHTML = ''; // Clear previous content
+
+            if (wrongAnswersLog.length === 0) {
+                wrongAnswersList.innerHTML = '<p class="text-gray-600 text-center">Great job! You got all questions correct or answered them all within the time limit!</p>';
+            } else {
+                wrongAnswersLog.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.classList.add('mb-4', 'p-4', 'border', 'rounded-lg', 'bg-red-50', 'text-left', 'border-red-200');
+                    div.innerHTML = `
+                        <p class="font-semibold text-gray-800 mb-2">Question ${index + 1}: ${item.question.replace(/_____/g, '____')}</p>
+                        <p class="text-red-600 mb-1"><i class="fas fa-times-circle mr-2"></i>Your Answer: <span class="font-medium">${item.userAnswer}</span></p>
+                        <p class="text-green-600"><i class="fas fa-check-circle mr-2"></i>Correct Answer: <span class="font-medium">${item.correctAnswer}</span></p>
+                        ${item.explanation ? `<p class="text-sm text-gray-500 mt-2">Explanation: ${item.explanation}</p>` : ''}
+                    `;
+                    wrongAnswersList.appendChild(div);
+                });
+            }
+            wrongAnswersModal.classList.remove('hidden');
+        }
+
+        // --- Guide Modal Functions (New) ---
+        function showGuide() {
+            guideModal.classList.remove('hidden');
+            // Initialize demo blank
+            demoBlankText.textContent = '____';
+            demoBlankText.classList.remove('filled'); // Ensure it's not filled initially
+        }
+
+        function closeGuide() {
+            localStorage.setItem(QUIZ_GUIDE_SHOWN_KEY, 'true');
+            guideModal.classList.add('hidden');
+        }
+
+        // --- Event Listeners ---
+        window.addEventListener('load', () => {
+            checkChallengeInUrl(); // Check for challenge params first and set initial screen state
+            setupShareListeners();
+
+            // If guide has not been shown, display it
+            if (localStorage.getItem(QUIZ_GUIDE_SHOWN_KEY) !== 'true') {
+                showGuide();
+            }
+        });
+
+        startButton.addEventListener('click', () => startGame(false));
+        startChallengeButton.addEventListener('click', () => startGame(true));
+        restartButton.addEventListener('click', resetQuiz);
+        reviewAnswersButton.addEventListener('click', showWrongAnswersModal);
+
+        // Guide modal event listeners
+        demoFillButton.addEventListener('click', () => {
+            if (demoBlankText.textContent === '____') {
+                demoBlankText.textContent = 'FILLED';
+                demoBlankText.classList.add('filled');
+            } else {
+                demoBlankText.textContent = '____'; // Reset for re-demo
+                demoBlankText.classList.remove('filled');
+            }
+        });
+        closeGuideButton.addEventListener('click', closeGuide);
+
+    </script>
+</body>
+</html> 
+
